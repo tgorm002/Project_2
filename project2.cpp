@@ -8,12 +8,13 @@
 #include <fstream>
 #include <sstream>
 
+//man why is this assignment so hard for me :(
 
 using namespace std;
 
-int currBestAccuracy = 0;
+float currBestAccuracy = 0;
 
-int numOfLinesInFile = 0;
+float numOfLinesInFile = 0;
 const int numCOlumnElements = 10; //exclusiding the first column
 
 float tempArr[numCOlumnElements];
@@ -23,8 +24,11 @@ float arr[3300];
 int placeInArr = 0;
 
 void fillTempArr(int numColumns, int index) {
+    int tempLoc = 0;
     for(int x = index; x < numColumns; x++) {
-        tempArr[x] = arr[11*x + x + 1];
+        tempArr[tempLoc] = arr[11*x + x + 1];
+        cout << tempArr[tempLoc] << endl;
+        tempLoc++;
     }
 }
 void fillTempArr2(int numColumns, int index) {
@@ -37,6 +41,7 @@ float findDistance(float arr1[numCOlumnElements], float arr2[numCOlumnElements])
     for(int i = 0; i< numCOlumnElements; i++) {
         someNum = someNum + pow((arr1[i] - arr2[i]), 2);
     }
+    //cout << someNum << endl;
     return someNum;
 }
 
@@ -116,49 +121,56 @@ void createArray(string str){
     return;
 }
 //float tempArr[numCOlumnElements];
-int getAccuracy() {
-    int numberClassifiedCorrectly = 0;
+float getAccuracy() {
+    float numberClassifiedCorrectly = 0;
     int nearest_neighbor_label = 0;
     
     for(int i = 0; i < numOfLinesInFile; i++) {
-        // tempArr[0] = arr[11*i + 1]; tempArr[1] = arr[11*i + 2]; //characters that make up the number were looking at which i need to figure out;
-        // tempArr[2] = arr[11*i + 3]; tempArr[3] = arr[11*i + 4];
-        // tempArr[4] = arr[11*i + 5]; tempArr[5] = arr[11*i + 6];
-        // tempArr[6] = arr[11*i + 7]; tempArr[7] = arr[11*i + 8];
-        // tempArr[8] = arr[11*i + 9]; tempArr[9] = arr[11*i + 10];
-        fillTempArr(10, i);
+        for(int x = 0; x < numCOlumnElements; x++) {
+            tempArr[x] = arr[11*i + x + 1];
+            //cout << tempArr[x] << endl;
+        }        
+        //fillTempArr(10, i);
         float label_object_to_classify = arr[11*i]; //0 -> 11 -> 22 -> ... -> 3289
-        float closest_distance = 100000000;
+        float closest_distance = 100000000; //gotta reset here
         float location = 100000000;
         for(int j = 0; j < numOfLinesInFile; j++) {
             //cout << "looping in inner for loop" << endl;
             if(j != i) {
-                fillTempArr2(10,j);
+                for(int x = 0; x < numCOlumnElements; x++) {
+                    tempArr2[x] = arr[11*j + x + 1];
+                    //cout << tempArr[x] << endl;
+                }        
+                //fillTempArr2(10,j);
                 float currDistance = findDistance(tempArr, tempArr2);
                 currDistance = sqrt(currDistance);
-                //cout << "HEHE" << endl;
+                //cout << currDistance << endl;
                 if(currDistance < closest_distance) {
                     //cout << "inside the 2nd if statemnt within the inner for loop" << endl;
                     closest_distance = currDistance;
                     location = j;
-                    nearest_neighbor_label = arr[11*i]; //might just want 11*i
+                    nearest_neighbor_label = arr[j]; //just treid arr[11*i] and we got 300 for correctly classified
                 }
             }
         }
         //cout << "Nearest neighbor " << endl;
         if(label_object_to_classify == nearest_neighbor_label){
             numberClassifiedCorrectly++;
+            //cout << "made it in here" << endl;
         }
 
     }
-    int finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
+    float finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
+    cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
+    cout << "num Lines in file: " <<  numOfLinesInFile << endl;
+    currBestAccuracy = finalAccuracy;
     return finalAccuracy;
 }
 
 int searchData() {
     int current_set_of_features [10]; //can have max 10 elements 
     for(int i = 0; i < numOfLinesInFile; i++) {
-        cout << "On the " << i << "th level of the tree" << endl;
+        //cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         for(int j = 0; j < 10; j++) { //was num of lines in file
@@ -166,7 +178,7 @@ int searchData() {
             //     //do nothing I think 
             // }
             // else {
-                cout << "--- Considering adding the " << j << "th feature" << endl;
+                //cout << "--- Considering adding the " << j << "th feature" << endl;
                 if(getAccuracy() > currBestAccuracy) {
                     cout << "testing" << endl;
                     currBestAccuracy = getAccuracy();
@@ -176,7 +188,7 @@ int searchData() {
             //}
         }
         //current_set_of_features[i] = feature_to_add[0];
-        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        //cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
     }
     cout << "why am i throwig an abort error?" << endl;
     return 0;
@@ -186,7 +198,7 @@ int main() {
     //open the txt file here prob using fstream
     //the size of the array i need is based on how many levels are in the tree
     string s;
-    int sTotal = 0;
+    float sTotal = 0;
     ifstream in;
     in.open("CS170_SMALLtestdata__66.txt");
     while(!in.eof()) {
