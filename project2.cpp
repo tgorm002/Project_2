@@ -129,7 +129,7 @@ float getAccuracy(int tester) {
     for(int i = 0; i < numOfLinesInFile; i++) { //was 0
         for(int x = tester; x < numCOlumnElements; x++) {
             tempArr[x] = arr[11*i + tester + 1];
-            cout << tempArr[x] << endl;
+            //cout << "filling temp arr1 " << tempArr[x] << endl;
         }        
         //fillTempArr(10, i);
         float label_object_to_classify = arr[11*i]; //0 -> 11 -> 22 -> ... -> 3289
@@ -140,7 +140,7 @@ float getAccuracy(int tester) {
             if(j != i) {
                 for(int x = tester; x < numCOlumnElements; x++) {
                     tempArr2[x] = arr[11*j + tester + 1];
-                    cout << tempArr[x] << endl;
+                    //cout << "filling temp arr2 " << tempArr[x] << endl;
                 }        
                 //fillTempArr2(10,j);
                 float currDistance = findDistance(tempArr, tempArr2);
@@ -150,14 +150,17 @@ float getAccuracy(int tester) {
                     //cout << "inside the 2nd if statemnt within the inner for loop" << endl;
                     closest_distance = currDistance;
                     location = j;
-                    nearest_neighbor_label = arr[j]; //just treid arr[11*i] and we got 300 for correctly classified which i know is wrong
+                    nearest_neighbor_label = arr[11*j]; //just treid arr[11*i] and we got 300 for correctly classified which i know is wrong
                 }
             }
         }
         //cout << "Nearest neighbor " << endl;
-        if(label_object_to_classify == nearest_neighbor_label){
+        //cout << label_object_to_classify << endl;
+        if(label_object_to_classify == nearest_neighbor_label){ //might want to edit this if check cuz it rarely goes perfecyl equal?
             numberClassifiedCorrectly++;
-           // cout << "made it in here" << endl;
+            // cout << label_object_to_classify << endl;
+            // cout << nearest_neighbor_label << endl;
+            // cout << "made it in here" << endl;
         }
 
     }
@@ -171,7 +174,7 @@ float getAccuracy(int tester) {
 int searchData() {
     //int current_set_of_features [numCOlumnElements+1]; //can have max 10 elements 
     for(int i = 0; i < numOfLinesInFile; i++) {
-        cout << "On the " << i << "th level of the tree" << endl;
+        //cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         for(int j = 0; j < numCOlumnElements; j++) { //was num of lines in file
@@ -183,14 +186,14 @@ int searchData() {
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
                 float iHateTHis = getAccuracy(j);
                 if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
-                    cout << "testing" << endl;
+                    //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
                     feature_to_add = j;
                 }
             //}
         }
         //current_set_of_features[i] = feature_to_add;
-        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        //cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
     }
     cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
     return 0;
@@ -203,7 +206,7 @@ int main() {
     float sTotal = 0;
     int choice;
     ifstream in;
-    cout << "Welcome to my Feature Selection Alforithm. " << endl;
+    cout << "Welcome to my Feature Selection Alforithm :) " << endl;
     // cout << "Enter the number 1 if you want to use the small data set and 2 if you want to use the large data set" << endl;
     // cin >> choice;
     // if(choice == 1) {
