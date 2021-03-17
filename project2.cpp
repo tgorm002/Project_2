@@ -122,13 +122,21 @@ void createArray(string str){
     return;
 }
 //float tempArr[numCOlumnElements];
-float getAccuracy(int tester) {
+float getAccuracy(int tester[]) {
     float numberClassifiedCorrectly = 0;
     int nearest_neighbor_label = 0;
-    
+    int arrSeize = 0;
+    for(int i = 0; i<10; i++) {
+        if(tester[i] != 0) {
+            arrSeize++;
+        }
+    }
+    // for(int i = 0; i < 10; i++) {
+    //     cout << tester[i] <<endl;
+    // }
     for(int i = 0; i < numOfLinesInFile; i++) { //was 0
-        for(int x = tester; x < numCOlumnElements; x++) {
-            tempArr[x] = arr[11*i + tester + 1];
+        for(int x = 0; x < arrSeize; x++) {
+            tempArr[x] = arr[11*i + x + 1];
             //cout << "filling temp arr1 " << tempArr[x] << endl;
         }        
         //fillTempArr(10, i);
@@ -138,8 +146,8 @@ float getAccuracy(int tester) {
         for(int j = 0; j < numOfLinesInFile; j++) {
             //cout << "looping in inner for loop" << endl;
             if(j != i) {
-                for(int x = tester; x < numCOlumnElements; x++) {
-                    tempArr2[x] = arr[11*j + tester + 1];
+                for(int x = 0; x < arrSeize; x++) {
+                    tempArr2[x] = arr[11*j + x + 1];
                     //cout << "filling temp arr2 " << tempArr[x] << endl;
                 }        
                 //fillTempArr2(10,j);
@@ -167,24 +175,27 @@ float getAccuracy(int tester) {
     float finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
     // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
     // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
+    //cout << finalAccuracy << endl;
+    
     finalBestAccuracy = finalAccuracy;
     return finalAccuracy;
 }
 
 int searchData() {
-    //int current_set_of_features [numCOlumnElements+1]; //can have max 10 elements 
     for(int i = 0; i < numOfLinesInFile; i++) {
         //cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
-        for(int j = 0; j < numCOlumnElements; j++) { //was num of lines in file
+        int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
+        for(int j = 1; j <= numCOlumnElements; j++) { //was num of lines in file
             //current_set_of_features[i]
             // if(checkReccuring(currNode, reccuringStates) == 1) { //he uses an intersect function here but im not 100% sure what that does
             //     //do nothing I think 
             // }
             // else {
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
-                float iHateTHis = getAccuracy(j);
+                current_set_of_features[j-1] = j;
+                float iHateTHis = getAccuracy(current_set_of_features);
                 if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
                     //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
