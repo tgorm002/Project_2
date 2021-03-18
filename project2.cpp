@@ -270,7 +270,7 @@ float getAccuracyLong(int tester[]) {
     
     // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
     // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
-    cout << finalAccuracy << endl;
+    //cout << finalAccuracy << endl;
 
     finalBestAccuracy = finalAccuracy;
     // for(int i = 0; i < 10; i++) {
@@ -369,8 +369,9 @@ int searchDataBackwards() {
 }
 
 int searchDataLong() {
+    int prevFeature = 0;
     for(int i = 0; i < numOfLinesInFile; i++) {
-        //cout << "On the " << i << "th level of the tree" << endl;
+        cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
@@ -384,11 +385,12 @@ int searchDataLong() {
                 // if(iHateTHis > .98) {
                 //     return 0;
                 // }
-                if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
+                if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
                     //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
                     //cout << currBestAccuracy << endl;
                     feature_to_add = j;
+                    //prevFeature = j;
                 }
                 else if(arr[j] != 0){
                     for(int i = 0; i < numColumnsLarge; i++) {
@@ -402,8 +404,10 @@ int searchDataLong() {
         
         //current_set_of_features[i] = feature_to_add;
         cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        prevFeature = feature_to_add;
+        cout << "With accuracy : " << currBestAccuracy << endl;
     }
-    cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
+    //cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
    
     return 0;
 }
