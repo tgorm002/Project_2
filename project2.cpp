@@ -50,6 +50,15 @@ float findDistance(float arr1[numCOlumnElements], float arr2[numCOlumnElements])
     return someNum;
 }
 
+float findDistanceLarge(float arr1[numColumnsLarge], float arr2[numColumnsLarge]){
+    float someNum = 0;
+    for(int i = 0; i< numColumnsLarge; i++) {
+        someNum = someNum + pow((arr1[i] - arr2[i]), 2);
+    }
+    //cout << someNum << endl;
+    return someNum;
+}
+
 int checkReccuring(int check[1][4], int alreadySeen[24][4]) {
     for(int i = 0; i < 24; i++) {
         for(int j = 0; j < 4; j++) {
@@ -212,12 +221,12 @@ float getAccuracyLong(int tester[]) {
             arrSeize++;
         }
     }
-    // for(int i = 0; i < 10; i++) {
+    // for(int i = 0; i < 100; i++) {
     //     cout << tester[i] <<endl;
     // }
     for(int i = 0; i < numOfLinesInFile; i++) { //was 0
         for(int x = 0; x < arrSeize; x++) {
-            tempArr[x] = arr[101*i + tester[x] + 1]; //tempArr[x] = arr[11*i + x + 1];
+            tempArrLarge[x] = arr[101*i + tester[x] + 1]; //tempArr[x] = arr[11*i + x + 1];
             //cout << "filling temp arr1 " << tempArr[x] << endl;
         }        
         //fillTempArr(10, i);
@@ -228,11 +237,11 @@ float getAccuracyLong(int tester[]) {
             //cout << "looping in inner for loop" << endl;
             if(j != i) {
                 for(int x = 0; x < arrSeize; x++) {
-                    tempArr2[x] = arr[101*j + tester[x] + 1]; //tempArr[x] = arr[11*j + x + 1];
+                    tempArr2Large[x] = arr[101*j + tester[x] + 1]; //tempArr[x] = arr[11*j + x + 1];
                     //cout << "filling temp arr2 " << tempArr[x] << endl;
                 }        
                 //fillTempArr2(10,j);
-                float currDistance = findDistance(tempArr, tempArr2);
+                float currDistance = findDistanceLarge(tempArrLarge, tempArr2Large);
                 currDistance = sqrt(currDistance);
                 //cout << currDistance << endl;
                 if(currDistance < closest_distance) {
@@ -360,21 +369,21 @@ int searchDataBackwards() {
 }
 
 int searchDataLong() {
-    //for(int i = 0; i < numOfLinesInFile; i++) {
+    for(int i = 0; i < numOfLinesInFile; i++) {
         //cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
         for(int j = 1; j <= numColumnsLarge; j++) { //was num of lines in file
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
-                point:
+                 point:
                 if(j <= 100){
                 current_set_of_features[j-1] = j;
                 }
-                float iHateTHis = getAccuracy(current_set_of_features);
-                if(iHateTHis > .98) {
-                    return 0;
-                }
+                float iHateTHis = getAccuracyLong(current_set_of_features);
+                // if(iHateTHis > .98) {
+                //     return 0;
+                // }
                 if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
                     //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
@@ -390,9 +399,10 @@ int searchDataLong() {
                 }
             //}
         }
+        
         //current_set_of_features[i] = feature_to_add;
-        //cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
-    //}
+        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+    }
     cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
    
     return 0;
@@ -427,7 +437,7 @@ int main() {
         cout << "Enter a 1 to run it forward and a 2 to run it backwards: " << endl;
         cin >> userInput;
         if(userInput == 1) {
-            searchDataLong();
+            searchData();
         }
         else {
             searchDataBackwards();
@@ -452,7 +462,7 @@ int main() {
         cout << "Enter a 1 to run it forward and a 2 to run it backwards: " << endl;
         cin >> userInput;
         if(userInput == 1) {
-            searchData();
+            searchDataLong();
         }
         else {
             searchDataBackwards();
