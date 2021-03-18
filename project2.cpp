@@ -118,6 +118,16 @@ void createArray(string str){
             // cout << "should add val to array" << endl;
             placeInArr++;
         }
+        else if(word.at(numSize - 3) == '-' && word.at(numSize-2) == '0' && word.at(numSize-1) == '5') { //ends in e-04
+            word.at(numSize - 4) = '0'; //e
+            word.at(numSize - 3) = '0'; //-
+            float temp = stof(word);
+            temp = temp * .00001;
+            //cout << temp << endl;
+            arr[placeInArr] = temp;
+            // cout << "should add val to array" << endl;
+            placeInArr++;
+        }
         else{
             cout << "SOMEHOW GOT HERE AND I SHOULDNT BE" << endl;
             cout << word << endl;
@@ -181,9 +191,73 @@ float getAccuracy(int tester[]) {
     }
 
     float finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
-    // if(finalAccuracy < .5) {
-    //     finalAccuracy = 1-finalAccuracy;
+    
+    // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
+    // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
+    cout << finalAccuracy << endl;
+
+    finalBestAccuracy = finalAccuracy;
+    // for(int i = 0; i < 10; i++) {
+    //     cout << tester[i] <<endl;
     // }
+    return finalAccuracy;
+}
+
+float getAccuracyLong(int tester[]) {
+    float numberClassifiedCorrectly = 0;
+    int nearest_neighbor_label = 0;
+    int arrSeize = 0;
+    for(int i = 0; i<100; i++) {
+        if(tester[i] != 0) {
+            arrSeize++;
+        }
+    }
+    // for(int i = 0; i < 10; i++) {
+    //     cout << tester[i] <<endl;
+    // }
+    for(int i = 0; i < numOfLinesInFile; i++) { //was 0
+        for(int x = 0; x < arrSeize; x++) {
+            tempArr[x] = arr[101*i + tester[x] + 1]; //tempArr[x] = arr[11*i + x + 1];
+            //cout << "filling temp arr1 " << tempArr[x] << endl;
+        }        
+        //fillTempArr(10, i);
+        float label_object_to_classify = arr[101*i]; //0 -> 11 -> 22 -> ... -> 3289
+        float closest_distance = 100000000; //gotta reset here
+        float location = 100000000;
+        for(int j = 0; j < numOfLinesInFile; j++) {
+            //cout << "looping in inner for loop" << endl;
+            if(j != i) {
+                for(int x = 0; x < arrSeize; x++) {
+                    tempArr2[x] = arr[101*j + tester[x] + 1]; //tempArr[x] = arr[11*j + x + 1];
+                    //cout << "filling temp arr2 " << tempArr[x] << endl;
+                }        
+                //fillTempArr2(10,j);
+                float currDistance = findDistance(tempArr, tempArr2);
+                currDistance = sqrt(currDistance);
+                //cout << currDistance << endl;
+                if(currDistance < closest_distance) {
+                    //cout << "inside the 2nd if statemnt within the inner for loop" << endl;
+                    closest_distance = currDistance;
+                    location = j;
+                    nearest_neighbor_label = arr[101*j]; //just treid arr[11*i] and we got 300 for correctly classified which i know is wrong
+                }
+            }
+        }
+        //cout << "Nearest neighbor " << nearest_neighbor_label << endl;
+        if(label_object_to_classify == nearest_neighbor_label){ //might want to edit this if check cuz it rarely goes perfecyl equal?
+            numberClassifiedCorrectly++;
+            // cout << label_object_to_classify << endl;
+            // cout << nearest_neighbor_label << endl;
+            // cout << "made it in here" << endl;
+        }
+
+    }
+
+    if(numberClassifiedCorrectly / numOfLinesInFile >= 1) {
+        return 0;
+    }
+
+    float finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
     
     // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
     // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
@@ -290,16 +364,11 @@ int searchDataLong() {
         //cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
-        int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
-        for(int j = 1; j <= numCOlumnElements; j++) { //was num of lines in file
-            //current_set_of_features[i]
-            // if(checkReccuring(currNode, reccuringStates) == 1) { //he uses an intersect function here but im not 100% sure what that does
-            //     //do nothing I think 
-            // }
-            // else {
+        int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
+        for(int j = 1; j <= numColumnsLarge; j++) { //was num of lines in file
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
                 point:
-                if(j <= 10){
+                if(j <= 100){
                 current_set_of_features[j-1] = j;
                 }
                 float iHateTHis = getAccuracy(current_set_of_features);
@@ -313,8 +382,8 @@ int searchDataLong() {
                     feature_to_add = j;
                 }
                 else if(arr[j] != 0){
-                    for(int i = 0; i < numOfLinesInFile; i++) {
-                        arr[11*i + j] = 0;
+                    for(int i = 0; i < numColumnsLarge; i++) {
+                        arr[101*i + j] = 0;
                     }
                     j++;
                     goto point;

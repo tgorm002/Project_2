@@ -44,7 +44,7 @@ void split2(string str){
             word.at(numSize - 4) = '0'; //e
             word.at(numSize - 3) = '0'; //-
             float temp = stof(word);
-            cout << temp  << " is at index " << placeInArr << endl;
+            //cout << temp  << " is at index " << placeInArr << endl;
             arr[placeInArr] = temp;
             // cout << "should add val to array" << endl;
             placeInArr++;
@@ -78,6 +78,16 @@ void split2(string str){
             // cout << "should add val to array" << endl;
             placeInArr++;
         }
+        else if(word.at(numSize - 3) == '-' && word.at(numSize-2) == '0' && word.at(numSize-1) == '5') { //ends in e-04
+            word.at(numSize - 4) = '0'; //e
+            word.at(numSize - 3) = '0'; //-
+            float temp = stof(word);
+            temp = temp * .00001;
+            //cout << temp << endl;
+            arr[placeInArr] = temp;
+            // cout << "should add val to array" << endl;
+            placeInArr++;
+        }
         else{
             cout << "SOMEHOW GOT HERE AND I SHOULDNT BE" << endl;
             cout << word << endl;
@@ -94,7 +104,7 @@ int main() {
         linenum++;
         // if(linenum == 69) {
             split2(str);
-            cout << str << endl;
+            //cout << str << endl;
         //}        
     }
     // for(int j = 0; j < 3300; j++) {
