@@ -382,11 +382,11 @@ int searchDataLong() {
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
         for(int j = 1; j <= numColumnsLarge; j++) { //was num of lines in file
-                //cout << "--- Considering adding the " << j << "th feature" << endl;
-                 point:
-                if(j <= 100){
-                current_set_of_features[j-1] = j;
-                }
+                cout << "--- Considering adding the " << j << "th feature" << endl;
+                //  point:
+                // if(j <= 100){
+                // current_set_of_features[j-1] = j;
+                //}
                 float iHateTHis = getAccuracyLong(current_set_of_features);
                 // if(iHateTHis > .98) {
                 //     return 0;
@@ -398,17 +398,18 @@ int searchDataLong() {
                     feature_to_add = j;
                     //prevFeature = j;
                 }
-                else if(arr[j] != 0){
-                    for(int i = 0; i < numColumnsLarge; i++) {
-                        arr[101*i + j] = 0;
-                    }
-                    j++;
-                    goto point;
-                }
+                // else if(arr[j] != 0){
+                //     for(int i = 0; i < numColumnsLarge; i++) {
+                //         arr[101*i + j] = 0;
+                //     }
+                //     j++;
+                //     goto point;
+                //}
             //}
+            current_set_of_features[j] = feature_to_add;
         }
         
-        //current_set_of_features[i] = feature_to_add;
+        
         cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
         prevFeature = feature_to_add;
         cout << "With accuracy : " << currBestAccuracy << endl;
