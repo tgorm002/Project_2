@@ -280,8 +280,9 @@ float getAccuracyLong(int tester[]) {
 }
 
 int searchData() {
-    //for(int i = 0; i < numOfLinesInFile; i++) {
-        //cout << "On the " << i << "th level of the tree" << endl;
+    int prevFeature = 0;
+    for(int i = 0; i < numOfLinesInFile; i++) {
+        cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
@@ -292,50 +293,53 @@ int searchData() {
             // }
             // else {
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
-                point:
-                if(j <= 10){
-                current_set_of_features[j-1] = j;
-                }
+                //point:
+                // if(j <= 10){
+                // current_set_of_features[j-1] = j;
+                // }
                 float iHateTHis = getAccuracy(current_set_of_features);
-                if(iHateTHis > .98) {
-                    return 0;
-                }
-                if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
+                // if(iHateTHis > .98) {
+                //     return 0;
+                // }
+                if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
                     //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
                     //cout << currBestAccuracy << endl;
                     feature_to_add = j;
                 }
-                else if(arr[j] != 0){
-                    for(int i = 0; i < numOfLinesInFile; i++) {
-                        arr[11*i + j] = 0;
-                    }
-                    j++;
-                    goto point;
-                }
+                // else if(arr[j] != 0){
+                //     for(int i = 0; i < numOfLinesInFile; i++) {
+                //         arr[11*i + j] = 0;
+                //     }
+                //     j++;
+                //     goto point;
+                // }
             //}
+            current_set_of_features[j-1] = feature_to_add;
         }
         //current_set_of_features[i] = feature_to_add;
-        //cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
-    //}
-    cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
+        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        prevFeature = feature_to_add;
+    }
+    //cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
    
     return 0;
 }
 
 int searchDataBackwards() {
-    //for(int i = 0; i < numOfLinesInFile; i++) {
-        //cout << "On the " << i << "th level of the tree" << endl;
+    int prevFeature = 0;
+    for(int i = 0; i < numOfLinesInFile; i++) {
+        cout << "On the " << i << "th level of the tree" << endl;
         currBestAccuracy = 0;
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
         int iterator = 0;
         for(int j = 10; j > 0; j--) { //was num of lines in file
                 //cout << "--- Considering adding the " << j << "th feature" << endl;
-                point: // a label
-                if(j > 0){
-                current_set_of_features[iterator] = j;
-                }
+                // point: // a label
+                // if(j > 0){
+                // current_set_of_features[iterator] = j;
+                // }
                 //current_set_of_features[iterator] = j;
                 iterator++;
                 float iHateTHis = getAccuracy(current_set_of_features);
@@ -344,26 +348,28 @@ int searchDataBackwards() {
                     return 0;
                 }
                 //cout << "heere" << endl;
-                if(iHateTHis > currBestAccuracy) { //struggling to go into this if check
+                if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
                     //cout << "testing" << endl;
                     currBestAccuracy = iHateTHis;
                     //cout << currBestAccuracy << endl;
                     feature_to_add = j;
                 }
                 
-                else if(arr[j] != 0){
-                    for(int i = 0; i < numOfLinesInFile; i++) {
-                        arr[11*i + j] = 0;
-                    }
-                    j--;
-                    goto point;
-                }
+                // else if(arr[j] != 0){
+                //     for(int i = 0; i < numOfLinesInFile; i++) {
+                //         arr[11*i + j] = 0;
+                //     }
+                //     j--;
+                //     goto point;
+                // }
             //}
+            current_set_of_features[iterator-1] = feature_to_add;
         }
         //current_set_of_features[i] = feature_to_add;
-        //cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        prevFeature = feature_to_add;
         
-    //}
+    }
     cout << "finsihed backwards" << endl;
     return 0;
 }
