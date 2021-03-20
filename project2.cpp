@@ -162,7 +162,6 @@ float getAccuracy(int tester[]) {
             tempArr[x] = arr[11*i + tester[x] + 1]; //tempArr[x] = arr[11*i + x + 1];
             //cout << "filling temp arr1 " << tempArr[x] << endl;
         }        
-        //fillTempArr(10, i);
         float label_object_to_classify = arr[11*i]; //0 -> 11 -> 22 -> ... -> 3289
         float closest_distance = 100000000; //gotta reset here
         float location = 100000000;
@@ -173,7 +172,6 @@ float getAccuracy(int tester[]) {
                     tempArr2[x] = arr[11*j + tester[x] + 1]; //tempArr[x] = arr[11*j + x + 1];
                     //cout << "filling temp arr2 " << tempArr[x] << endl;
                 }        
-                //fillTempArr2(10,j);
                 float currDistance = findDistance(tempArr, tempArr2);
                 currDistance = sqrt(currDistance);
                 //cout << currDistance << endl;
@@ -192,19 +190,18 @@ float getAccuracy(int tester[]) {
             // cout << nearest_neighbor_label << endl;
             // cout << "made it in here" << endl;
         }
-
     }
-
     if(numberClassifiedCorrectly / numOfLinesInFile >= 1) {
         return 0;
     }
-
     float finalAccuracy = numberClassifiedCorrectly / numOfLinesInFile;
     
     // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
     // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
+    // if(finalAccuracy < .5) {
+    //     finalAccuracy = 1 -finalAccuracy;
+    // }
     cout << finalAccuracy << endl;
-
     finalBestAccuracy = finalAccuracy;
     // for(int i = 0; i < 10; i++) {
     //     cout << tester[i] <<endl;
@@ -270,7 +267,7 @@ float getAccuracyLong(int tester[]) {
     
     // cout << "number classified correctly: " << numberClassifiedCorrectly << endl;
     // cout << "num Lines in file: " <<  numOfLinesInFile << endl;
-    //cout << finalAccuracy << endl;
+    cout << finalAccuracy << endl;
 
     finalBestAccuracy = finalAccuracy;
     // for(int i = 0; i < 10; i++) {
@@ -287,34 +284,14 @@ int searchData() {
         int feature_to_add; //only adding 1 feature at a time
         int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
         for(int j = 1; j <= numCOlumnElements; j++) { //was num of lines in file
-            //current_set_of_features[i]
-            // if(checkReccuring(currNode, reccuringStates) == 1) { //he uses an intersect function here but im not 100% sure what that does
-            //     //do nothing I think 
-            // }
-            // else {
-                //cout << "--- Considering adding the " << j << "th feature" << endl;
-                //point:
-                // if(j <= 10){
-                // current_set_of_features[j-1] = j;
-                // }
-                float iHateTHis = getAccuracy(current_set_of_features);
-                // if(iHateTHis > .98) {
-                //     return 0;
-                // }
-                if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
-                    //cout << "testing" << endl;
-                    currBestAccuracy = iHateTHis;
-                    //cout << currBestAccuracy << endl;
-                    feature_to_add = j;
-                }
-                // else if(arr[j] != 0){
-                //     for(int i = 0; i < numOfLinesInFile; i++) {
-                //         arr[11*i + j] = 0;
-                //     }
-                //     j++;
-                //     goto point;
-                // }
-            //}
+            cout << "--- Considering adding the " << j << "th feature" << endl;  
+            float iHateTHis = getAccuracy(current_set_of_features);
+            if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
+                //cout << "testing" << endl;
+                currBestAccuracy = iHateTHis;
+                //cout << currBestAccuracy << endl;
+                feature_to_add = j;
+            }
             current_set_of_features[j-1] = feature_to_add;
         }
         //current_set_of_features[i] = feature_to_add;
@@ -322,7 +299,6 @@ int searchData() {
         prevFeature = feature_to_add;
     }
     //cout << "why am i throwig an abort error here?" << endl; //solved and it was cuz array out of range
-   
     return 0;
 }
 
@@ -368,7 +344,64 @@ int searchDataBackwards() {
         //current_set_of_features[i] = feature_to_add;
         cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
         prevFeature = feature_to_add;
-        
+        cout << "With accuracy : " << currBestAccuracy << endl;
+    }
+    cout << "finsihed backwards" << endl;
+    return 0;
+}
+
+int searchDataBackwardsLong() {
+    int prevFeature = 0;
+    int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
+    int temp = 100;
+    // for(int i = 0; i < 100; i++) {
+    //     current_set_of_features[i] = temp;
+    //     temp--;
+    // }
+   //int current_set_of_features[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33}; //can have max 10 elements //also gotta reset these values
+   //current_set_of_features[66] = 66;
+
+    for(int i = 0; i < numOfLinesInFile; i++) {
+        cout << "On the " << i << "th level of the tree" << endl;
+        currBestAccuracy = 0;
+        int feature_to_add; //only adding 1 feature at a time
+        //int current_set_of_features[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //can have max 10 elements //also gotta reset these values
+        int iterator = 0;
+        for(int j = 100; j > 0; j--) { //was num of lines in file
+                cout << "--- Considering adding the " << j << "th feature" << endl;
+                 point: // a label
+                // if(j > 0){
+                // current_set_of_features[iterator] = j;
+                // }
+                //current_set_of_features[iterator] = j;
+                iterator++;
+                float iHateTHis = getAccuracyLong(current_set_of_features);
+                //cout << "weird error happenig here" << endl;
+                if(iHateTHis > .98) {
+                    return 0;
+                }
+                //cout << "heere" << endl;
+                if(iHateTHis > currBestAccuracy && prevFeature != j) { //struggling to go into this if check
+                    //cout << "testing" << endl;
+                    currBestAccuracy = iHateTHis;
+                    cout << currBestAccuracy << endl;
+                    feature_to_add = j;
+                }
+                
+                else if(arr[j] != 0){
+                    for(int i = 0; i < numOfLinesInFile; i++) {
+                        arr[11*i + j] = 0;
+                    }
+                    j--;
+                    goto point;
+                }
+            //}
+            //current_set_of_features[iterator-1] = feature_to_add;
+        }
+        current_set_of_features[i] = feature_to_add;
+        cout << "On the " << i << "th level we added feature " << feature_to_add << " to the current set" << endl;
+        prevFeature = feature_to_add;
+        cout << "With accuracy : " << currBestAccuracy << endl;
     }
     cout << "finsihed backwards" << endl;
     return 0;
@@ -443,7 +476,7 @@ int main() {
             createArray(str);      
         }
         numOfLinesInFile = sTotal;
-        cout << "total num of lines in file: " << numOfLinesInFile << endl;
+        cout << "This data set has 10 features and 300 instances" << endl;// << numOfLinesInFile << endl;
         int userInput;
         cout << "Enter a 1 to run it forward and a 2 to run it backwards: " << endl;
         cin >> userInput;
@@ -476,24 +509,12 @@ int main() {
             searchDataLong();
         }
         else {
-            searchDataBackwards();
+            searchDataBackwardsLong();
         }
     }
-    // in.open("CS170_SMALLtestdata__66.txt");
-    // while(!in.eof()) {
-    //     getline(in, s);
-    //     sTotal ++;	
-    // }
-    // ifstream file("CS170_SMALLtestdata__66.txt");
-    // string str; 
-    // int linenum = 0;
-    // while (getline(file, str)) {
-    //     linenum++;
-    //     createArray(str);      
-    // }
-    
-    
-    cout <<"do i get here?" << endl;
+
+    //cout <<"do i get here?" << endl;
+  
     cout << "best found accuracy is: "<< currBestAccuracy << endl;
     return 0;
 }
